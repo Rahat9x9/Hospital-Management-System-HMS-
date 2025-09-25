@@ -1,0 +1,383 @@
+/* Custom CSS */
+.card {
+    border: none;
+    border-radius: 15px;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.badge {
+    font-weight: 500;
+    padding: 0.5em 0.75em;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border: none;
+    padding: 0.5rem 1.5rem;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+.modal-header {
+    border-radius: 15px 15px 15px 15px;
+}
+
+/* Logo sizing helper */
+.site-logo {
+    width: 140px;
+    height: 140px;
+    display: inline-block;
+    vertical-align: middle;
+    object-fit: contain;
+    overflow: hidden;
+}
+
+/* Give navbar more vertical room to accommodate larger logo */
+.navbar {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    overflow: hidden;
+}
+
+@media (max-width: 767px) {
+    .site-logo { width: 96px; height: 96px; }
+    .navbar { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+}
+
+/* Minimal header look */
+.navbar .nav-link {
+    color: #333;
+    font-weight: 500;
+}
+
+.navbar .nav-link:hover {
+    color: #000;
+}
+
+/* Modern header styles */
+.navbar-center .app-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #2b2b5a;
+    letter-spacing: 0.4px;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg,#f5f7ff,#e9f1ff);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #1f2a44;
+    box-shadow: 0 2px 10px rgba(31,42,68,0.08);
+}
+
+/* Slightly reduce header height on small screens */
+@media (max-width: 991px) {
+    .site-logo { width: 120px; height: 120px; }
+    .navbar-center .app-title { font-size: 1rem; }
+}
+
+/* Make navbar look elevated */
+.navbar {
+    box-shadow: 0 6px 24px rgba(50,60,120,0.06);
+    border-bottom: 1px solid rgba(20,30,60,0.04);
+}
+
+/* Topbar header styles */
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 1rem;
+    background: linear-gradient(180deg,#ffffff,#fbfdff);
+    border-bottom: 1px solid rgba(30,40,80,0.04);
+    box-shadow: 0 8px 30px rgba(20,30,80,0.04);
+}
+.topbar-left, .topbar-center, .topbar-right { display: flex; align-items: center; }
+.brand { text-decoration: none; color: #2b2b5a; font-weight: 700; }
+.brand-logo svg { display: block; }
+.brand-text { font-size: 1.1rem; color: #2b2b5a; }
+.sidebar-toggle { background: transparent; border: none; color: #5b667a; }
+.search-box { background: #fff; border-radius: 10px; padding: 6px 10px; box-shadow: 0 6px 18px rgba(15,25,60,0.04); border: 1px solid rgba(20,30,60,0.04); }
+.search-box .search-icon { color: #9aa3b2; margin-right: 8px; }
+.icon-btn { background: #fff; border: none; box-shadow: 0 6px 18px rgba(15,25,60,0.04); border-radius: 8px; color: #556; padding: 8px; }
+.user-mini .avatar-sm img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+.user-name { font-weight: 600; color: #2b2b5a; }
+
+@media (max-width: 767px) {
+    .topbar-center { display: none; }
+    .brand-text { display: none; }
+}
+
+/* Sidebar styles */
+.app-shell { min-height: 100vh; }
+.app-sidebar {
+    width: 260px;
+    background: linear-gradient(180deg,#f7fbfd,#f3f7fb);
+    border-right: 1px solid rgba(30,40,80,0.03);
+    padding-top: 12px;
+    transition: width .25s ease;
+}
+.app-sidebar .sidebar-top { border-bottom: 1px solid rgba(30,40,80,0.03); }
+.app-sidebar .sidebar-logo img { width: 44px; height:44px; }
+.sidebar-nav ul { list-style: none; padding: 8px 0; margin: 0; }
+.sidebar-nav li { margin: 6px 0; }
+.sidebar-nav a { display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: #35506a; text-decoration: none; border-radius: 8px; }
+.sidebar-nav a:hover, .sidebar-nav li.active a { background: #0d6efd; box-shadow: 0 6px 18px rgba(20,30,60,0.04); }
+.sidebar-nav i { width: 26px; text-align: center; color: #2b5b73; }
+.sidebar-footer { border-top: 1px solid rgba(30,40,80,0.03); margin-top: auto; }
+
+/* collapsed */
+.app-shell.sidebar-collapsed .app-sidebar { width: 72px; }
+.app-shell.sidebar-collapsed .sidebar-nav a span { display: none; }
+.app-shell.sidebar-collapsed .brand-text { display: none; }
+
+/* Main content area */
+.app-main { padding: 1.5rem; background: linear-gradient(180deg,#f3f6fb,#eef4ff); }
+
+/* Card styles for dashboard */
+.card-dashboard { border-radius: 12px; box-shadow: 0 8px 30px rgba(20,30,60,0.04); border: none; }
+.stat-card { display:flex; align-items:center; gap:12px; padding:18px; }
+.stat-card .icon { width:54px; height:54px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:22px; }
+.stat-card .value { font-size:20px; font-weight:700; color:#1f2a44; }
+/* Right column widgets */
+.appointments-list .list-group-item,
+.doctor-list .list-group-item {
+    border: 0;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border-color, #eef2f6);
+}
+
+.appointments-list .list-group-item:last-child,
+.doctor-list .list-group-item:last-child {
+    border-bottom: 0;
+}
+
+.appointments-list .fw-bold { font-size: 0.97rem; }
+.doctor-list .list-group-item { display: flex; flex-direction: column; gap: 2px; }
+
+.card-dashboard .small.text-muted { color: #6c757d; }
+
+/* Chart area */
+#appointmentsChart { max-width: 100%; height: auto; }
+
+@media (max-width: 767px) {
+    .app-shell { flex-direction: column; }
+    .app-sidebar { width: 100%; height: auto; }
+}
+
+/* Doctor grid styles */
+.doctor-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 12px; }
+.doctor-card { position: relative; border-radius: 12px; padding: 16px; display:flex; gap:12px; align-items:center; box-shadow: 0 6px 18px rgba(20,30,60,0.06); }
+.doctor-avatar { width:96px; height:96px; border-radius:12px; background:linear-gradient(180deg,#fff,#f7f8fb); display:flex; align-items:center; justify-content:center; font-weight:700; color:#2b4ea1; font-size:20px; border:1px solid rgba(0,0,0,0.04); }
+.doctor-body { flex:1; }
+.doctor-card .social .btn-circle { width:36px; height:36px; border-radius:50%; padding:0; display:inline-flex; align-items:center; justify-content:center; margin-right:6px; }
+.doctor-badge { position:absolute; top:8px; right:8px; background:#e9f7ef; color:#117a3b; padding:6px 8px; border-radius:8px; font-size:12px; font-weight:700; }
+
+.doctor-card-link { display:block; color:inherit; text-decoration:none; }
+.doctor-card-link .doctor-card:hover { transform: translateY(-6px); box-shadow: 0 12px 36px rgba(20,30,60,0.12); }
+
+@media (min-width: 576px) {
+    .doctor-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 992px) {
+    .doctor-grid { grid-template-columns: repeat(1, 1fr); }
+}
+/* grid wrapping for stat cards */
+.dashboard-cards .d-flex { gap: 1rem; }
+.card-dashboard { padding: 12px; min-width: 220px; }
+.card-dashboard .small { color: #6b7785; }
+
+/* Make the main navbar sticky and visually dominant so it replaces any stray small UI */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1050; /* above most content */
+    background-color: #fff; /* ensure solid background */
+}
+
+/* Remove default body margin and provide no extra top gap */
+body {
+    margin: 0;
+}
+
+/* Ensure inline SVG/img fills the .site-logo container and doesn't add whitespace */
+.site-logo svg, .site-logo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Info Cards for Dashboard Stats */
+.info-card {
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(30,40,80,0.10);
+    background: linear-gradient(120deg,#f8fafc 0%, #e0e7ff 100%);
+    padding: 1.5rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin-bottom: 1.2rem;
+    min-width: 200px;
+}
+.info-card .icon {
+    font-size: 2.5rem;
+    color: #2563eb;
+    background: #e0e7ff;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(37,99,235,0.08);
+}
+.info-card .stat-label {
+    font-size: 1.1rem;
+    color: #2b2b5a;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+.info-card .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2563eb;
+}
+.info-card .stat-sub {
+    font-size: 0.95rem;
+    color: #6b7785;
+}
+
+/* Recent Admissions Card */
+.recent-admissions-card {
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(30,40,80,0.08);
+    background: #fff;
+    margin-bottom: 2rem;
+    padding: 0;
+}
+.recent-admissions-header {
+    background: linear-gradient(90deg, #2563eb 0%, #38bdf8 100%);
+    color: #fff;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 24px rgba(56,189,248,0.10);
+}
+.recent-admissions-search {
+    border-radius: 1.5rem;
+    border: 2px solid #38bdf8;
+    box-shadow: 0 2px 8px rgba(56,189,248,0.08);
+    font-size: 1rem;
+    transition: border-color 0.2s;
+    width: 50%;
+}
+.recent-admissions-search:focus {
+    border-color: #2563eb;
+    outline: none;
+}
+.recent-admissions-table {
+    border-radius: 0 0 16px 16px;
+    overflow: hidden;
+}
+.recent-admissions-table th, .recent-admissions-table td {
+    border: none !important;
+    font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+    font-size: 1.05rem;
+    vertical-align: middle;
+    color: #2d2d6b;
+    letter-spacing: 0.2px;
+}
+.recent-admissions-table tbody tr:nth-of-type(odd) {
+    background-color: #f3f6fd;
+}
+.recent-admissions-table tbody tr.table-primary {
+    background-color: #e0f2fe !important;
+}
+.recent-admissions-table tbody tr.table-warning {
+    background-color: #fff7e6 !important;
+}
+.recent-admissions-table tbody tr:hover {
+    background-color: #e0e7ff;
+    transition: background 0.2s;
+}
+.recent-admissions-table .badge {
+    background: linear-gradient(90deg, #38bdf8 0%, #2563eb 100%) !important;
+    color: #fff;
+    font-weight: 500;
+    font-size: 1rem;
+    border-radius: 1rem;
+    box-shadow: 0 1px 4px rgba(56,189,248,0.10);
+}
+.recent-admissions-footer {
+    border-top: 1px solid #e0e7ff;
+    background: #f8fafc;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.recent-admissions-footer-text {
+    font-size: 0.95rem;
+    color: #2563eb;
+    font-weight: 500;
+}
+.recent-admissions-footer-btn {
+    border-radius: 1.5rem;
+    font-weight: 600;
+    padding: 0.5rem 1.5rem;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+    transition: background 0.2s, color 0.2s;
+}
+.recent-admissions-footer-btn:hover {
+    background: linear-gradient(90deg, #2563eb 0%, #38bdf8 100%);
+    color: #fff;
+}
+
+/* Responsive grid for dashboard cards */
+.dashboard-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+@media (max-width: 991px) {
+    .dashboard-cards {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .info-card {
+        min-width: 100%;
+    }
+}
+@media (max-width: 767px) {
+    .recent-admissions-header, .recent-admissions-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 1rem;
+    }
+    .recent-admissions-search {
+        width: 100%;
+    }
+    .dashboard-cards {
+        gap: 0.75rem;
+    }
+}

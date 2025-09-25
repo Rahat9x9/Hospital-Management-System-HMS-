@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% block title %}Staff Management{% endblock %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">Hospital Staff Management</h2>
+
+  <!-- Tabs -->
+  <ul class="nav nav-tabs mb-4" id="staffTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="doctors-tab" data-bs-toggle="tab" data-bs-target="#doctors" type="button">Doctors</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="nurses-tab" data-bs-toggle="tab" data-bs-target="#nurses" type="button">Nurses</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="technicians-tab" data-bs-toggle="tab" data-bs-target="#technicians" type="button">Technicians</button>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <!-- ------------------ Doctors ------------------ -->
+    <div class="tab-pane fade show active" id="doctors">
+      <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addDoctorModal">Add Doctor</button>
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle">
+          <thead class="table-primary">
+            <tr>
+              <th>Name</th>
+              <th>Specialization</th>
+              <th>Grade</th>
+              <th>Team</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for doctor in doctors %}
+            <tr>
+              <td>{{ doctor.name }}</td>
+              <td>{{ doctor.specialization }}</td>
+              <td>{{ doctor.grade }}</td>
+              <td>{{ doctor.team.name if doctor.team else '-' }}</td>
+              <td>
+                <form method="post" action="{{ url_for('staff.delete_doctor', id=doctor.id) }}" style="display:inline;">
+                  <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+              </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="5" class="text-muted text-center">No doctors found.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ------------------ Nurses ------------------ -->
+    <div class="tab-pane fade" id="nurses">
+      <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addNurseModal">Add Nurse</button>
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle">
+          <thead class="table-warning">
+            <tr>
+              <th>Name</th>
+              <th>Grade</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for nurse in nurses %}
+            <tr>
+              <td>{{ nurse.name }}</td>
+              <td>{{ nurse.grade }}</td>
+              <td>{{ nurse.username }}</td>
+              <td>{{ nurse.email }}</td>
+              <td>
+                <form method="post" action="{{ url_for('staff.delete_nurse', id=nurse.id) }}" style="display:inline;">
+                  <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+              </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="5" class="text-muted text-center">No nurses found.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ------------------ Technicians ------------------ -->
+    <div class="tab-pane fade" id="technicians">
+      <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addTechnicianModal">Add Technician</button>
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle">
+          <thead class="table-secondary">
+            <tr>
+              <th>Name</th>
+              <th>Specialization</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for tech in technicians %}
+            <tr>
+              <td>{{ tech.name }}</td>
+              <td>{{ tech.specialization }}</td>
+              <td>
+                <form method="post" action="{{ url_for('staff.delete_technician', id=tech.id) }}" style="display:inline;">
+                  <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+              </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="3" class="text-muted text-center">No technicians found.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ------------------ Add Staff Modals ------------------ -->
+
+<!-- Add Doctor Modal -->
+<div class="modal fade" id="addDoctorModal" tabindex="-1">
+  <div class="modal-dialog">
+    <form method="post" action="{{ url_for('staff.add_doctor') }}">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Doctor</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" name="name" placeholder="Name" class="form-control mb-2" required>
+          <input type="text" name="specialization" placeholder="Specialization" class="form-control mb-2" required>
+          <input type="text" name="grade" placeholder="Grade" class="form-control mb-2" required>
+          <select name="team_id" class="form-select mb-2" required>
+            <option value="">Select Team</option>
+            {% for team in teams %}
+            <option value="{{ team.id }}">{{ team.name }}</option>
+            {% endfor %}
+          </select>
+          <select name="user_id" class="form-select mb-2">
+            <option value="">Select User (optional)</option>
+            {% for user in users %}
+            <option value="{{ user.id }}">{{ user.username }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Add Doctor</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Add Nurse Modal -->
+<div class="modal fade" id="addNurseModal" tabindex="-1">
+  <div class="modal-dialog">
+    <form method="post" action="{{ url_for('staff.add_nurse') }}">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Nurse</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" name="name" placeholder="Name" class="form-control mb-2" required>
+          <input type="text" name="grade" placeholder="Grade" class="form-control mb-2" required>
+          <select name="user_id" class="form-select mb-2">
+            <option value="">Select User (optional)</option>
+            {% for user in users %}
+            <option value="{{ user.id }}">{{ user.username }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Add Nurse</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Add Technician Modal -->
+<div class="modal fade" id="addTechnicianModal" tabindex="-1">
+  <div class="modal-dialog">
+    <form method="post" action="{{ url_for('staff.add_technician') }}">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Technician</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" name="name" placeholder="Name" class="form-control mb-2" required>
+          <input type="text" name="specialization" placeholder="Specialization" class="form-control mb-2" required>
+          <select name="user_id" class="form-select mb-2">
+            <option value="">Select User (optional)</option>
+            {% for user in users %}
+            <option value="{{ user.id }}">{{ user.username }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Add Technician</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

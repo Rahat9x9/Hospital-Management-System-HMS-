@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Doctor Scheduling - Hospital App{% endblock %}
+{% block content %}
+<div class="container-fluid py-4" style="font-family: 'Inter', 'Segoe UI', Arial, sans-serif;">
+  <div class="d-flex flex-wrap align-items-center justify-content-between mb-4">
+    <div>
+      <h2 class="mb-1">Doctor Scheduling</h2>
+      <p class="text-muted mb-0">Manage doctor appointments and schedules</p>
+    </div>
+    <button class="btn btn-dark fw-bold px-4 py-2"><i class="fas fa-plus me-2"></i> New Appointment</button>
+  </div>
+  <div class="row g-4">
+    <!-- Left Column: Appointments -->
+    <div class="col-12 col-md-8">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <div class="d-flex flex-wrap gap-2 mb-3 align-items-center">
+            <div class="input-group w-auto">
+              <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+              <input type="date" class="form-control" value="{{ selected_date|default('') }}">
+            </div>
+            <select class="form-select w-auto" style="min-width:150px;">
+              <option>All Departments</option>
+              {% for doc in doctors|unique(attribute='specialty') %}
+              <option>{{ doc.specialty }}</option>
+              {% endfor %}
+            </select>
+            <input type="text" class="form-control w-50" placeholder="Search patients or doctors...">
+          </div>
+          <h5 class="mb-3">Today's Appointments</h5>
+          <p class="text-muted">{{ stats.total_today }} appointments scheduled for {{ selected_date|default('today') }}</p>
+          {% for appt in appointments %}
+          <div class="card mb-3 border-0 shadow-sm">
+            <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+              <div>
+                <div class="fw-bold fs-5 mb-1">{{ appt.patient_name }}</div>
+                {% if appt.status == 'confirmed' %}<span class="badge bg-success me-1">confirmed</span>{% endif %}
+                {% if appt.status == 'pending' %}<span class="badge bg-warning text-dark me-1">pending</span>{% endif %}
+                {% if appt.status == 'cancelled' %}<span class="badge bg-danger me-1">cancelled</span>{% endif %}
+                <span class="badge bg-primary me-1">{{ appt.type }}</span>
+                <div class="text-muted mt-1"><i class="fas fa-user-md me-1"></i> {{ appt.doctor_name }} &nbsp; <span class="small">{{ appt.specialty }}</span></div>
+                <div class="text-muted small"><i class="fas fa-clock me-1"></i> {{ appt.start_time }} ({{ appt.duration }} min)</div>
+              </div>
+              <div class="mt-2 mt-md-0 d-flex gap-2">
+                <button class="btn btn-outline-secondary btn-sm">Edit</button>
+                <button class="btn btn-outline-danger btn-sm">Cancel</button>
+              </div>
+            </div>
+          </div>
+          {% else %}
+          <div class="text-center text-muted">No appointments scheduled</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <!-- Right Column: Doctor Availability & Stats -->
+    <div class="col-12 col-md-4">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h6 class="mb-3">Doctor Availability</h6>
+          {% for doc in doctors %}
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <div>
+              <span class="fw-bold">{{ doc.name }}</span>
+              <span class="text-muted small ms-2">{{ doc.specialty }}</span>
+            </div>
+            <span class="badge {{ 'bg-dark' if doc.availability == 'Available' else 'bg-secondary' }}">{{ doc.availability }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h6 class="mb-3">Quick Stats</h6>
+          <div class="d-flex justify-content-between mb-2">
+            <span>Total Today</span>
+            <span class="fw-bold">{{ stats.total_today }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span>Confirmed</span>
+            <span class="fw-bold text-success">{{ stats.confirmed }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span>Pending</span>
+            <span class="fw-bold text-warning">{{ stats.pending }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span>Cancelled</span>
+            <span class="fw-bold text-danger">{{ stats.cancelled }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

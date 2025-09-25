@@ -1,0 +1,156 @@
+<!-- templates/patients.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+      <h2 class="text-primary mb-0"><i class="fas fa-users me-2"></i>Patient Management</h2>
+      <button class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#admitModal" data-bs-toggle="tooltip" data-bs-placement="left" title="Admit a new patient">
+        <i class="fas fa-plus me-2"></i>Admit Patient
+      </button>
+    </div>
+  </div>
+  <div class="card shadow-lg border-0 rounded-4">
+    <div class="card-body">
+      <div class="d-flex justify-content-end mb-3">
+        <input type="text" id="patientSearch" class="form-control w-25" placeholder="Search by name, ward, or team..." />
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle" id="patientsTable">
+          <thead class="table-light">
+            <tr>
+              <th>Name</th>
+              <th>Age</th>
+              <th>Ward</th>
+              <th>Team</th>
+              <th>Admission Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for patient in patients %}
+            <tr>
+              <td>{{ patient.name }}</td>
+              <td>{{ patient.age }}</td>
+              <td>{{ patient.ward.type }} Ward (Bed {{ patient.ward_id }})</td>
+              <td>{{ patient.team.code }}</td>
+              <td>{{ patient.admission_date.strftime('%Y-%m-%d') }}</td>
+              <td>
+                {% if patient.discharge_date %}
+                  <span class="badge bg-secondary">Discharged</span>
+                {% else %}
+                  <span class="badge bg-success">Admitted</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if not patient.discharge_date %}
+                <button class="btn btn-sm btn-outline-danger discharge-btn me-1" 
+                        data-patient-id="{{ patient.id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Discharge this patient">
+                  <i class="fas fa-sign-out-alt"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-warning transfer-btn"
+                        data-patient-id="{{ patient.id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Transfer this patient">
+                  <i class="fas fa-exchange-alt"></i>
+                </button>
+                {% else %}
+                <span class="text-muted">-</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div id="thankYouMsg" class="alert alert-success mt-3 d-none text-center" role="alert">
+        <strong>Thank you!</strong> Wow, patient action completed successfully.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Admit Patient Modal -->
+<div class="modal fade" id="admitModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Admit New Patient</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="/admit">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Age</label>
+                        <input type="number" class="form-control" name="age" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Gender</label>
+                        <select class="form-select" name="gender" required>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Medical Team</label>
+                        <select class="form-select" name="team_id" required>
+                            {% for team in teams %}
+                            <option value="{{ team.id }}">{{ team.code }} ({{ team.consultant.name }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Admit Patient</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+<script>
+// Enable Bootstrap tooltips
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+  new bootstrap.Tooltip(tooltipTriggerEl);
+});
+
+// Patient table search/filter
+document.getElementById('patientSearch').addEventListener('keyup', function() {
+    var value = this.value.toLowerCase();
+    var rows = document.querySelectorAll('#patientsTable tbody tr');
+    rows.forEach(function(row) {
+        var name = row.children[0].textContent.toLowerCase();
+        var ward = row.children[2].textContent.toLowerCase();
+        var team = row.children[3].textContent.toLowerCase();
+        if (name.includes(value) || ward.includes(value) || team.includes(value)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+});
+
+// Show thank you message on action (simulate for demo)
+document.querySelectorAll('.discharge-btn, .transfer-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var msg = document.getElementById('thankYouMsg');
+    msg.classList.remove('d-none');
+    msg.classList.add('show');
+    setTimeout(function() {
+      msg.classList.remove('show');
+      msg.classList.add('d-none');
+    }, 2000);
+  });
+});
+</script>
+{% endblock %}

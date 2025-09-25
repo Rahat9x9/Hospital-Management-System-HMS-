@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Billing - Hospital App{% endblock %}
+{% block content %}
+<div class="container-fluid mt-4">
+  <h2 class="mb-4">Billing</h2>
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-body p-0">
+          <table class="table table-striped mb-0">
+            <thead>
+              <tr>
+                <th>Patient</th>
+                <th>Service</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for bill in bills %}
+              <tr>
+                <td>{{ bill.patient_name }}</td>
+                <td>{{ bill.service }}</td>
+                <td>${{ bill.amount }}</td>
+                <td>{{ bill.date }}</td>
+                <td>
+                  <span class="badge {{ 'bg-success' if bill.status == 'Paid' else 'bg-warning text-dark' }}">{{ bill.status }}</span>
+                </td>
+              </tr>
+              {% else %}
+              <tr><td colspan="5" class="text-center text-muted">No bills found</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h6 class="mb-3">Total Billed</h6>
+          <div class="fs-2 fw-bold">${{ total_billed }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

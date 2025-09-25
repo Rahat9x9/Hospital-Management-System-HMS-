@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-7 col-md-9">
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-primary text-white rounded-top-4">
+          <h3 class="mb-0"><i class="fa-solid fa-user-plus me-2"></i> Add New Patient</h3>
+        </div>
+        <div class="card-body p-4">
+          <form method="post" action="{{ url_for('patients.add_patient') }}">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="name" class="form-label">Full Name</label>
+                <input type="text" class="form-control form-control-lg" id="name" name="name" required placeholder="Enter patient name" />
+              </div>
+              <div class="col-md-3">
+                <label for="age" class="form-label">Age</label>
+                <input type="number" class="form-control form-control-lg" id="age" name="age" required min="0" max="120" placeholder="Age" />
+              </div>
+              <div class="col-md-3">
+                <label for="gender" class="form-label">Gender</label>
+                <select class="form-select form-select-lg" id="gender" name="gender" required>
+                  <option value="" disabled selected>Select</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="ward_name" class="form-label">Ward</label>
+                <select class="form-select form-select-lg" id="ward_name" name="ward_name" required>
+                  <option value="" disabled selected>Select ward</option>
+                  {% for w in wards %}
+                  <option value="{{ w.name }}">{{ w.name }} ({{ w.type }})</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="team_id" class="form-label">Medical Team</label>
+                <select class="form-select form-select-lg" id="team_id" name="team_id" required>
+                  <option value="" disabled selected>Select team</option>
+                  {% for t in teams %}
+                  <option value="{{ t.id }}">{{ t.code }} - {{ t.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="admission_date" class="form-label">Admission Date</label>
+                <input type="date" class="form-control form-control-lg" id="admission_date" name="admission_date" value="{{ current_date }}" required />
+              </div>
+
+            </div>
+            <div class="mt-4 d-flex justify-content-end">
+              <button type="submit" class="btn btn-success btn-lg px-5"><i class="fa-solid fa-plus"></i> Add Patient</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function checkPasswordStrength(input) {
+  var val = input.value;
+  var strength = 0;
+  if (val.length >= 8) strength++;
+  if (/[A-Z]/.test(val)) strength++;
+  if (/[a-z]/.test(val)) strength++;
+  if (/[0-9]/.test(val)) strength++;
+  if (/[^A-Za-z0-9]/.test(val)) strength++;
+  var msg = '';
+  var color = '';
+  if (strength <= 2) { msg = 'Weak'; color = 'text-danger'; }
+  else if (strength === 3) { msg = 'Medium'; color = 'text-warning'; }
+  else if (strength >= 4) { msg = 'Strong'; color = 'text-success'; }
+  var id = input.id === 'patient-password' ? 'patient-password-strength' : 'password-strength';
+  document.getElementById(id).innerHTML = '<span class="fw-bold ' + color + '">' + msg + '</span>';
+}
+</script>
+{% endblock %}

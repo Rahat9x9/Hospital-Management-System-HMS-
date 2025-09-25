@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard - Hospital App{% endblock %}
+{% block head %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  body { font-family: 'Inter', sans-serif; }
+  .card { border-radius: 0.75rem; }
+  .stat-card { display: flex; align-items: center; justify-content: center; padding: 1rem; color: #fff; border-radius: 0.75rem; }
+  .stat-icon { font-size: 2rem; opacity: 0.8; }
+  .list-group-item { display: flex; justify-content: space-between; align-items: center; border: none; padding: 0.75rem 1rem; }
+  .list-group-item .text-muted { font-size: 0.8rem; }
+  .table thead { background-color: #f8f9fa; }
+  .table tbody tr:hover { background-color: #f1f5f9; }
+  .badge-active { background: linear-gradient(90deg, #0d6efd, #38bdf8); color: #fff; }
+  .fade-in { animation: fadeInUp 0.7s cubic-bezier(.39,.575,.565,1) both; }
+  @keyframes fadeInUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+  .stat-card { min-height: 120px; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+  {# full_wards is now passed from the Flask route #}
+  {% set show_alerts = (full_wards|length > 0) or (stats.available_beds == 0) or (pending_treatments and pending_treatments|length > 0) %}
+  {% if current_user.is_authenticated and current_user.role in ['admin', 'staff'] and show_alerts %}
+  <!-- Alerts Section -->
+  <div class="row mb-4 fade-in">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm bg-danger bg-gradient text-white">
+        <div class="card-header bg-danger bg-gradient text-white fw-bold fs-5">
+          <i class="fas fa-exclamation-triangle me-2"></i>Alerts & Notifications
+        </div>
+        <div class="card-body">
+          <ul class="mb-0">
+            {% for ward in full_wards %}
+              <li><i class="fas fa-bed me-2"></i>Ward <strong>{{ ward.name }}</strong> is <span class="badge bg-warning text-dark">FULL</span> ({{ ward.current_occupancy }}/{{ ward.capacity }} beds occupied)</li>
+            {% endfor %}
+            {% if stats.available_beds == 0 %}
+              <li><i class="fas fa-procedures me-2"></i>All beds are currently <span class="badge bg-warning text-dark">OCCUPIED</span>.</li>
+            {% endif %}
+            {% if pending_treatments and pending_treatments|length > 0 %}
+              <li><i class="fas fa-notes-medical me-2"></i>{{ pending_treatments|length }} treatment(s) are <span class="badge bg-warning text-dark">PENDING</span>.</li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Top Stats -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="stat-card bg-primary shadow-sm h-100 d-flex flex-column justify-content-center align-items-center">
+        <div><i class="fas fa-users stat-icon"></i></div>
+        <div class="text-center">
+          <div class="fs-4 fw-bold">{{ stats.total_patients }}</div>
+          <div>Total Patients</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card bg-success shadow-sm h-100 d-flex flex-column justify-content-center align-items-center">
+        <div><i class="fas fa-user-md stat-icon"></i></div>
+        <div class="text-center">
+          <div class="fs-4 fw-bold">{{ stats.total_doctors }}</div>
+          <div>Total Doctors</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card bg-warning text-dark shadow-sm h-100 d-flex flex-column justify-content-center align-items-center">
+        <div><i class="fas fa-user-nurse stat-icon"></i></div>
+        <div class="text-center">
+          <div class="fs-4 fw-bold">{{ stats.total_nurses }}</div>
+          <div>Total Nurses</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card bg-info shadow-sm h-100 d-flex flex-column justify-content-center align-items-center">
+        <div><i class="fas fa-bed stat-icon"></i></div>
+        <div class="text-center">
+          <div class="fs-4 fw-bold">{{ stats.available_beds }}</div>
+          <div>Available Beds</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <a href="{{ url_for('patients.add_patient_form') }}" class="card shadow-sm text-center text-decoration-none py-4 h-100">
+        <i class="fas fa-user-plus fs-1 text-primary"></i>
+        <div class="fw-bold mt-2">Add Patient</div>
+      </a>
+    </div>
+    <div class="col-md-4">
+      <a href="{{ url_for('staff.staff_list') }}" class="card shadow-sm text-center text-decoration-none py-4 h-100">
+  <i class="fas fa-user-nurse fs-1 text-info"></i>
+  <div class="fw-bold mt-2">Staff</div>
+      </a>
+    </div>
+    <div class="col-md-4">
+      <a href="{{ url_for('wards.list_wards') }}" class="card shadow-sm text-center text-decoration-none py-4 h-100">
+        <i class="fas fa-hospital fs-1 text-success"></i>
+        <div class="fw-bold mt-2">Add Ward</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Recent Activity & Recent Patients -->
+  <div class="row g-3 mb-4 fade-in">
+    <div class="col-md-6">
+      <div class="card shadow-sm border-0 h-100" style="max-height: 350px; min-height: 350px; overflow-y: auto;">
+        <div class="card-header bg-white fw-bold fs-5">Recent Activity</div>
+        <ul class="list-group list-group-flush">
+          {% for act in recent_activities %}
+          <li class="list-group-item d-flex align-items-center" style="border-left: 4px solid #0d6efd;">
+            <div class="me-3">
+              {% if 'add' in act.action|lower %}
+                <i class="fas fa-user-plus text-success fs-4"></i>
+              {% elif 'delete' in act.action|lower %}
+                <i class="fas fa-user-minus text-danger fs-4"></i>
+              {% elif 'transfer' in act.action|lower %}
+                <i class="fas fa-exchange-alt text-warning fs-4"></i>
+              {% elif 'discharge' in act.action|lower %}
+                <i class="fas fa-sign-out-alt text-info fs-4"></i>
+              {% else %}
+                <i class="fas fa-history text-secondary fs-4"></i>
+              {% endif %}
+            </div>
+            <div class="flex-grow-1">
+              <span class="fw-semibold text-dark">{{ act.username }}</span>
+              <span class="text-muted small">{{ act.timestamp.strftime('%b %d, %Y %I:%M %p') }}</span><br>
+              <span class="text-body">{{ act.details.replace('Patient', '').replace("'", "").strip()|capitalize }}</span>
+            </div>
+          </li>
+          {% else %}
+          <li class="list-group-item text-center text-muted">No recent activity</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card shadow-sm border-0 h-100" style="max-height: 350px; min-height: 350px; overflow-y: auto;">
+        <div class="card-header bg-white fw-bold fs-5">Recent Patients</div>
+        <ul class="list-group list-group-flush">
+          {% for p in recent_patients %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <span class="fw-semibold">{{ p.name }}</span>
+              <span class="small text-muted ms-2">Admitted: {{ p.admission_date.strftime('%Y-%m-%d') }}</span>
+            </div>
+            <span class="badge badge-active rounded-pill">Active</span>
+          </li>
+          {% else %}
+          <li class="list-group-item text-muted text-center">No recent patients</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Teams Table -->
+  <div class="row g-3 mb-4 fade-in">
+    <div class="col-12">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-white fw-bold fs-5">Medical Teams</div>
+        <div class="card-body p-0">
+          <table class="table table-hover mb-0">
+            <thead>
+              <tr>
+                <th>Team Code</th>
+                <th>Name</th>
+                <th>Specialization</th>
+                <th>Consultant</th>
+                <th>Doctors</th>
+                <th>Patients</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for team in teams %}
+              <tr>
+                <td>{{ team.code }}</td>
+                <td>{{ team.name }}</td>
+                <td>{{ team.specialization }}</td>
+                <td>
+                  {% set consultant = team.doctors|selectattr('grade', 'equalto', 'Consultant')|list %}
+                  {% if consultant %}{{ consultant[0].name }}{% else %}N/A{% endif %}
+                </td>
+                <td>
+                  {% for doctor in team.doctors %}
+                  {{ doctor.name }} ({{ doctor.grade }}){% if not loop.last %}, {% endif %}
+                  {% endfor %}
+                </td>
+                <td><a href="{{ url_for('patients.list_patients_by_team', team_id=team.id) }}">View</a></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="row g-3 mb-4 fade-in">
+    <div class="col-md-6">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-white fw-bold fs-6">Treatment Chart</div>
+        <div class="card-body" style="height:300px;">
+          <canvas id="treatmentChart" style="max-width:100%;max-height:260px;"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-white fw-bold fs-6">Ward Occupancy</div>
+        <div class="card-body" style="height:300px;">
+          <canvas id="wardChart" style="max-width:100%;max-height:260px;"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row g-3 mb-4 fade-in">
+    <div class="col-12">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-white fw-bold fs-6">Staff Workload</div>
+        <div class="card-body" style="height:300px;">
+          <canvas id="staffChart" style="max-width:100%;max-height:260px;"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const treatmentLabels = {{ treatments_chart.labels|tojson|safe }};
+const treatmentData = {{ treatments_chart.data|tojson|safe }};
+const wardLabels = {{ ward_chart.labels|tojson|safe }};
+const wardData = {{ ward_chart.data|tojson|safe }};
+const staffLabels = {{ staff_chart.labels|tojson|safe }};
+const staffData = {{ staff_chart.data|tojson|safe }};
+
+// Treatment Bar Chart
+new Chart(document.getElementById('treatmentChart'), {
+  type: 'bar',
+  data: {
+    labels: treatmentLabels,
+    datasets: [{ label: 'Treatments', data: treatmentData, backgroundColor: '#0d6efd', borderRadius: 6 }]
+  },
+  options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+});
+
+// Ward Pie Chart
+new Chart(document.getElementById('wardChart'), {
+  type: 'pie',
+  data: { labels: wardLabels, datasets: [{ data: wardData, backgroundColor: ['#0d6efd', '#198754', '#dc3545', '#0dcaf0'], borderWidth: 2 }] },
+  options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+});
+
+// Staff Workload Chart
+new Chart(document.getElementById('staffChart'), {
+  type: 'bar',
+  data: { labels: staffLabels, datasets: [{ label: 'Staff', data: staffData, backgroundColor: '#198754', borderRadius: 6 }] },
+  options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,110 @@
+  {% extends 'base.html' %}
+
+  {% block content %}
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="card shadow-lg border-0 rounded-4">
+          <div class="card-header bg-primary text-white rounded-top-4">
+            <h3 class="mb-0"><i class="fas fa-user-injured me-2"></i>Patient Details</h3>
+          </div>
+          <div class="card-body p-4">
+            <dl class="row mb-0">
+              <dt class="col-sm-4">Name:</dt>
+              <dd class="col-sm-8">{{ patient.name }}</dd>
+              <dt class="col-sm-4">Age:</dt>
+              <dd class="col-sm-8">{{ patient.age }}</dd>
+              <dt class="col-sm-4">Gender:</dt>
+              <dd class="col-sm-8">
+                {% if patient.gender|lower == 'male' %}Male{% elif patient.gender|lower == 'female' %}Female{% else %}{{ patient.gender|capitalize }}{% endif %}
+              </dd>
+              <dt class="col-sm-4">Admission Date:</dt>
+              <dd class="col-sm-8">{{ patient.admission_date.strftime('%Y-%m-%d') }}</dd>
+              <dt class="col-sm-4">Ward:</dt>
+              <dd class="col-sm-8">{{ patient.assigned_ward.name }}</dd>
+              <dt class="col-sm-4">Team:</dt>
+              <dd class="col-sm-8">{{ patient.treatment_team.name }} ({{ patient.treatment_team.code }})</dd>
+              <dt class="col-sm-4">Consultant:</dt>
+              <dd class="col-sm-8">
+                {% set consultant = patient.treatment_team.doctors|selectattr('grade', 'equalto', 'Consultant')|list %}
+                {% if consultant %}
+                  {{ consultant[0].name }}
+                {% else %}
+                  <span class="text-danger">None</span>
+                {% endif %}
+              </dd>
+              <dt class="col-sm-4">Treating Doctors:</dt>
+              <dd class="col-sm-8">
+                {% for log in patient.treatment_logs %}
+                  <div>
+                    <strong>{{ log.doctor.name }}</strong> <span class="badge bg-info ms-2">{{ log.doctor.grade }}</span>
+                    {% if log.nurse %}<span class="badge bg-secondary ms-2">Nurse: {{ log.nurse.name }}</span>{% endif %}
+                    <small class="text-muted">({{ log.treatment_time.strftime('%Y-%m-%d %H:%M') }})</small>
+                    {% if log.medication or log.dosage %}<br>
+                      <span class="text-muted">Med: {{ log.medication or '-' }}, Dose: {{ log.dosage or '-' }}</span>
+                    {% endif %}
+                    {% if log.notes %}<br><span class="text-muted">Notes: {{ log.notes }}</span>{% endif %}
+                  </div>
+                {% else %}
+                  <span class="text-muted">No treatments recorded</span>
+                {% endfor %}
+              </dd>
+              <dt class="col-sm-4">Discharged:</dt>
+              <dd class="col-sm-8">
+                {% if patient.is_discharged() %}
+                  <span class="badge bg-secondary">Yes</span>
+                {% else %}
+                  <span class="badge bg-success">No</span>
+                {% endif %}
+              </dd>
+            </dl>
+              {% if current_user.is_authenticated and current_user.role == 'doctor' and current_user.team_id == patient.team_id and not patient.is_discharged() %}
+              <hr>
+              <div class="mt-4">
+                <h5 class="mb-3"><i class="fas fa-notes-medical me-2"></i>Record Treatment</h5>
+                <form method="POST" action="{{ url_for('treatment.treat_patient', patient_id=patient.id) }}">
+                  <input type="hidden" name="doctor_id" value="{{ current_user.id }}">
+                  <div class="mb-3">
+                    <label for="medication" class="form-label">Medication</label>
+                    <input type="text" class="form-control" id="medication" name="medication" placeholder="Enter medication name">
+                  </div>
+                  <div class="mb-3">
+                    <label for="dosage" class="form-label">Dosage</label>
+                    <input type="text" class="form-control" id="dosage" name="dosage" placeholder="Enter dosage (e.g. 500mg, 1 tablet)">
+                  </div>
+                  <div class="mb-3">
+                    <label for="nurse_id" class="form-label">Attending Nurse</label>
+                    <select class="form-select" id="nurse_id" name="nurse_id">
+                      <option value="">-- Select Nurse --</option>
+                      {% for nurse in nurses %}
+                        <option value="{{ nurse.id }}">{{ nurse.name }}{% if nurse.grade %} ({{ nurse.grade }}){% endif %}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="treatmentNotes" class="form-label">Notes / Observations</label>
+                    <textarea class="form-control" id="treatmentNotes" name="notes" rows="3" placeholder="Enter treatment notes, etc..."></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-success"><i class="fas fa-save me-1"></i> Record Treatment</button>
+                </form>
+              </div>
+              {% endif %}
+          </div>
+          <div class="card-footer bg-light rounded-bottom-4 d-flex justify-content-between align-items-center py-3">
+            <a href="{{ url_for('patients.list_patients') }}" class="btn btn-outline-secondary px-4">
+              <i class="fas fa-arrow-left me-1"></i> Back to Patients
+            </a>
+            <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-primary px-4">
+              <i class="fas fa-tachometer-alt me-1"></i> Dashboard
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+
+  {% block scripts %}
+  {{ super() }}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  {% endblock %}

@@ -1,0 +1,64 @@
+/* Dashboard-specific styles moved from dashboard.html */
+body {
+  font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+  background: linear-gradient(120deg, #f8fafc 0%, #e0e7ff 100%);
+  min-height: 100vh;
+}
+.stylish-badge {
+  background: linear-gradient(90deg, #38bdf8 0%, #2563eb 100%) !important;
+  color: #fff;
+  font-weight: 500;
+  font-size: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 1px 4px rgba(56,189,248,0.10);
+}
+.stylish-date {
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+.stylish-team {
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 1rem;
+  box-shadow: 0 1px 4px rgba(56,189,248,0.10);
+}
+.stylish-footer {
+  border-top: 1px solid #e0e7ff;
+  background: #f8fafc;
+}
+.stylish-footer-text {
+  font-size: 0.95rem;
+  color: #2563eb;
+  font-weight: 500;
+}
+.stylish-footer-btn {
+  border-radius: 1.5rem;
+  font-weight: 600;
+  padding: 0.5rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+  transition: background 0.2s, color 0.2s;
+}
+.stylish-footer-btn:hover {
+  background: linear-gradient(90deg, #2563eb 0%, #38bdf8 100%);
+  color: #fff;
+}
+.fade-in-row {
+  animation: fadeInUp 0.7s cubic-bezier(.39,.575,.565,1) both;
+}
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.table th, .table td {
+  font-family: 'Roboto', Arial, sans-serif;
+  font-size: 1rem;
+  vertical-align: middle;
+  color: #2d2d6b;
+}
+.table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: #f3f4f6;
+}
+.table-hover > tbody > tr:hover {
+  background-color: #e0e7ff;
+}

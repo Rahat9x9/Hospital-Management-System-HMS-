@@ -1,0 +1,66 @@
+{% if current_user.is_authenticated %}
+<aside class="app-sidebar shadow-lg animate__animated animate__fadeInLeft bg-white border-end" style="min-height:100vh; width:260px; position:fixed; top:0; left:0; z-index:1040;">
+  <div class="sidebar-top d-flex align-items-center justify-content-center p-4 border-bottom">
+    <span class="fs-3 fw-bold text-primary"><i class="fa-solid fa-hospital me-2"></i> MedCare HMS</span>
+  </div>
+  <nav class="sidebar-nav mt-3">
+    <ul class="list-unstyled">
+      {% set role = current_user.role|lower %}
+      {% if role == 'doctor' %}
+        <li class="mb-2"><a href="{{ url_for('doctor.dashboard') }}" class="d-flex align-items-center py-2 px-3 rounded nav-link sidebar-link"><i class="fas fa-home me-2"></i> <span>Dashboard</span></a></li>
+        <li class="mb-2"><a href="{{ url_for('dashboard.doctor_scheduling') }}" class="d-flex align-items-center py-2 px-3 rounded nav-link sidebar-link"><i class="fas fa-calendar-alt me-2"></i> <span>Doctor Scheduling</span></a></li>
+        <li class="mb-2"><a href="{{ url_for('dashboard.medical_records') }}" class="d-flex align-items-center py-2 px-3 rounded nav-link sidebar-link"><i class="fas fa-notes-medical me-2"></i> <span>Medical Records</span></a></li>
+        <li class="mb-2"><a href="{{ url_for('dashboard.billing') }}" class="d-flex align-items-center py-2 px-3 rounded nav-link sidebar-link"><i class="fas fa-file-invoice-dollar me-2"></i> <span>Billing</span></a></li>
+        <li class="mb-2"><a href="{{ url_for('dashboard.reports') }}" class="d-flex align-items-center py-2 px-3 rounded nav-link sidebar-link"><i class="fas fa-chart-pie me-2"></i> <span>Reports</span></a></li>
+        <li class="mt-4"><a href="{{ url_for('auth.logout') }}" class="d-flex align-items-center py-2 px-3 rounded nav-link sidebar-link text-danger"><i class="fas fa-sign-out-alt me-2"></i> <span>Logout</span></a></li>
+      {% elif role == 'nurse' %}
+        <li class="mb-2"><a href="{{ url_for('nurse.dashboard') }}" class="d-flex align-items-center py-2 px-3 rounded nav-link sidebar-link"><i class="fas fa-home me-2"></i> <span>Dashboard</span></a></li>
+        <li class="mb-2"><a href="{{ url_for('dashboard.medical_records') }}" class="d-flex align-items-center py-2 px-3 rounded nav-link sidebar-link"><i class="fas fa-notes-medical me-2"></i> <span>Medical Records</span></a></li>
+        <li class="mt-4"><a href="{{ url_for('auth.logout') }}" class="d-flex align-items-center py-2 px-3 rounded nav-link sidebar-link text-danger"><i class="fas fa-sign-out-alt me-2"></i> <span>Logout</span></a></li>
+      {% else %}
+        <li class="mb-2"><a href="{{ url_for('dashboard.dashboard') }}" class="d-flex align-items-center py-2 px-3 rounded nav-link sidebar-link"><i class="fas fa-home me-2"></i> <span>Dashboard</span></a></li>
+        <li class="mb-2"><a href="{{ url_for('patients.list_patients') }}" class="d-flex align-items-center py-2 px-3 rounded nav-link sidebar-link"><i class="fas fa-users me-2"></i> <span>Patients</span></a></li>
+        <li class="mb-2"><a href="{{ url_for('teams.list_teams') }}" class="d-flex align-items-center py-2 px-3 rounded nav-link sidebar-link"><i class="fas fa-user-md me-2"></i> <span>Medicale Team</span></a></li>
+        <li class="mb-2"><a href="{{ url_for('wards.list_wards') }}" class="d-flex align-items-center py-2 px-3 rounded nav-link sidebar-link"><i class="fas fa-hospital me-2"></i> <span>Wards</span></a></li>
+        <li class="mb-2"><a href="{{ url_for('dashboard.reports') }}" class="d-flex align-items-center py-2 px-3 rounded nav-link sidebar-link"><i class="fas fa-chart-pie me-2"></i> <span>Reports</span></a></li>
+        <li class="mt-4"><a href="{{ url_for('auth.logout') }}" class="d-flex align-items-center py-2 px-3 rounded nav-link sidebar-link text-danger"><i class="fas fa-sign-out-alt me-2"></i> <span>Logout</span></a></li>
+      {% endif %}
+    </ul>
+  </nav>
+  <div class="sidebar-footer mt-auto p-3 border-top text-center small text-muted">
+    <span>&copy; {{ now().year }} MedCare HMS</span>
+  </div>
+</aside>
+<style>
+  .sidebar-link {
+    transition: background 0.2s, color 0.2s;
+    font-size: 1.08rem;
+    letter-spacing: 0.01em;
+  }
+  .sidebar-link:hover, .sidebar-link.active {
+    background: #f0f4fa;
+    color: #0d6efd !important;
+    text-decoration: none;
+  }
+  .sidebar-link i {
+    font-size: 1.25rem;
+    min-width: 1.5em;
+    text-align: center;
+  }
+  @media (max-width: 991px) {
+    .app-sidebar {
+      width: 100vw !important;
+      min-height: 60px !important;
+      position: relative !important;
+      border-right: none !important;
+      border-bottom: 1px solid #e5e7eb !important;
+    }
+    .sidebar-top {
+      padding: 1rem !important;
+    }
+    .sidebar-footer {
+      display: none !important;
+    }
+  }
+</style>
+{% endif %}

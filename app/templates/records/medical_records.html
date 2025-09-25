@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Medical Records - Hospital App{% endblock %}
+{% block content %}
+<div class="container-fluid mt-4">
+  <h2 class="mb-4">Medical Records</h2>
+  <div class="card shadow-sm">
+    <div class="card-body p-0">
+      <table class="table table-striped mb-0">
+        <thead>
+          <tr>
+            <th>Patient Name</th>
+            <th>Admission Date</th>
+            <th>Discharge Date</th>
+            <th>Diagnosis</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in records %}
+          <tr>
+            <td>{{ r.patient.name }}</td>
+            <td>{{ r.admission_date.strftime('%Y-%m-%d') if r.admission_date else 'N/A' }}</td>
+            <td>{{ r.discharge_date.strftime('%Y-%m-%d') if r.discharge_date else 'N/A' }}</td>
+            <td>{{ r.diagnosis }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4" class="text-center text-muted">No records found</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

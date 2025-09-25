@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Reports & Billing - Hospital App{% endblock %}
+{% block content %}
+<div class="container-fluid mt-4">
+  <h2 class="mb-4">Reports & Billing</h2>
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="card shadow-sm text-center">
+        <div class="card-body">
+          <div class="fs-2 fw-bold">{{ total_patients }}</div>
+          <div class="text-muted">Total Patients</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow-sm text-center">
+        <div class="card-body">
+          <div class="fs-2 fw-bold">{{ total_treatments }}</div>
+          <div class="text-muted">Total Treatments</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow-sm text-center">
+        <div class="fs-2 fw-bold">${{ income_estimate }}</div>
+        <div class="text-muted">Income Estimate</div>
+      </div>
+    </div>
+  </div>
+  <div class="card shadow-sm">
+    <div class="card-body p-0">
+      <table class="table table-striped mb-0">
+        <thead>
+          <tr>
+            <th>Patient</th>
+            <th>Treatment Date</th>
+            <th>Doctor</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in treatments %}
+          <tr>
+            <td>{{ t.patient.name }}</td>
+            <td>{{ t.treatment_time.strftime('%Y-%m-%d') }}</td>
+            <td>{{ t.doctor.name }}</td>
+            <td>{{ t.notes }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4" class="text-center text-muted">No treatments found</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
