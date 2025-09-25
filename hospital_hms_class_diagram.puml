@@ -1,0 +1,71 @@
+@startuml
+class User {
+  +id: Integer
+  +username: String
+  +email: String
+  +role: String
+  +password_hash: String
+}
+
+class Doctor {
+  +id: Integer
+  +name: String
+  +specialization: String
+  +grade: String
+  +team_id: Integer
+  +user_id: Integer
+}
+
+class Nurse {
+  +id: Integer
+  +name: String
+  +grade: String
+  +user_id: Integer
+}
+
+class Technician {
+  +id: Integer
+  +name: String
+  +specialization: String
+  +user_id: Integer
+}
+
+class Team {
+  +id: Integer
+  +name: String
+}
+
+class Patient {
+  +id: Integer
+  +name: String
+  +gender: String
+  +date_of_birth: Date
+  +ward_id: Integer
+  +team_id: Integer
+  +identifier: String
+}
+
+class Ward {
+  +id: Integer
+  +name: String
+  +capacity: Integer
+  +gender: String
+}
+
+class ActivityLog {
+  +id: Integer
+  +user_id: Integer
+  +action: String
+  +timestamp: DateTime
+  +patient_id: Integer
+}
+
+Doctor --> User
+Nurse --> User
+Technician --> User
+Doctor --> Team
+Patient --> Ward
+Patient --> Team
+ActivityLog --> User
+ActivityLog --> Patient
+@enduml
